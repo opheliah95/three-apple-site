@@ -1,14 +1,12 @@
-import { useState } from 'react'
+import React from 'react'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
+    <div>
       <h1 class="text-3xl font-bold underline">
       Prototype
-    </h1>
-    </>
+      </h1>
+    </div>
   )
 }
 
