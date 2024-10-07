@@ -1,27 +1,61 @@
-import React from 'react'
-import gsap from 'gsap';
-import {useGSAP} from '@gsap/react';
-import { heroVideo } from '../utils';
-gsap.registerPlugin(useGSAP)
+import React, { useEffect, useState } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { heroVideo, smallHeroVideo } from "../utils";
+
+gsap.registerPlugin(useGSAP);
 const Hero = () => {
-    useGSAP(()=> {
-        gsap.to(
-            "#hero", {
-                opacity: 1,
-                transition: 2
-            }
-        )
-    }, [])
+  const [videoSrc, setVideoSrc] = useState(
+    window.innerWidth < 760 ? smallHeroVideo : heroVideo
+  );
+  useGSAP(() => {
+    gsap.to("#hero", {
+      opacity: 1,
+      transition: 2,
+    });
+    gsap.to("#cta", {
+        opacity: 1,
+        transition: 2,
+        y: -50,
+        delay: 1
+      });
+  }, []);
+  const handleVideoSrcSet = () => {
+    if (window.innerWidth < 760) setVideoSrc(smallHeroVideo);
+    else setVideoSrc(heroVideo);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleVideoSrcSet);
+    return () => {
+      window.removeEventListener("resize", handleVideoSrcSet);
+    };
+  }, []);
   return (
     <section className="nav-height w-full bg-black relative">
-        <div className="h-5/6 w-full flex-center flex-col">
-            <p className="hero-title" id="hero">iPhone 15 Pro</p>
-        </div>
+      <div className="h-5/6 w-full flex-center flex-col">
+        <p className="hero-title" id="hero">
+          iPhone 15 Pro
+        </p>
         <div className="md:w-10/12 w-9/12">
-            <video src={heroVideo}></video>
+          <video
+            className="pointer-events-none"
+            src={videoSrc}
+            typeof="video/mp4"
+            autoPlay
+            muted
+            playsInline={true}
+            key={videoSrc}
+          ></video>
         </div>
+      </div>
+      <div id="cta"
+        className="flex flex-col flex-center opacity-0 translate-y-20">
+            <a href="#highlights" className="btn sm:w-4/12 w-3/12 text-center">Buy</a>
+            <p className="font-normal text-xl">From $100/month or $999</p>
+      </div>
     </section>
-  )
-}
+  );
+};
 
-export default Hero
+export default Hero;
