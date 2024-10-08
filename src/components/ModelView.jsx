@@ -7,7 +7,8 @@ import {
 } from "@react-three/drei";
 import Lights from "./Lights";
 import * as THREE from "three";
-import { Iphone } from "./Iphone";
+import Iphone  from "./Iphone";
+import Loader from "./Loader";
 const ModelView = ({
   index,
   groupRef,
@@ -40,7 +41,7 @@ const ModelView = ({
         name={`${index === 1} ? 'small' : 'large`}
         position={[0, 0, 0]}
       >
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loader/>}>
           <Iphone
              scale={index === 1 ? [15, 15, 15] : [17, 17, 17]} 
              item={item}
