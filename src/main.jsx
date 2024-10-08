@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
-
+import React from 'react'
 //...
 import * as Sentry from "@sentry/react";
 
@@ -10,8 +10,15 @@ Sentry.init({
   dsn: "https://a3eec00b1e0d6c5b0ac3e1fd857d12ab@o4508088940888064.ingest.de.sentry.io/4508088948752464",
   integrations: [
     Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration(),
+    Sentry.reactRouterV6BrowserTracingIntegration({
+      useEffect: React.useEffect,
+    }),
+    Sentry.replayIntegration({
+      maskAllText: false,
+      blockAllMedia: false,
+    }),
   ],
+  
   // Tracing
   tracesSampleRate: 1.0, //  Capture 100% of the transactions
   // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
