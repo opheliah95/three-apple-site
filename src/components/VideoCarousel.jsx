@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { hightlightsSlides } from "../constants";
 import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import { pauseImg, playImg, replayImg } from "../utils";
 const VideoCarousel = () => {
   const videoRef = useRef([]);
@@ -15,6 +16,30 @@ const VideoCarousel = () => {
   });
   let { isEnd, isLastVideo, startPlay, videoId, isPlaying } = video;
   const [loadedData, setLoadedData] = useState([]);
+
+  // handle different cases
+  const handleProcess = (type, i) => {
+    switch (type) {
+      case "video-end":
+        setVideo((prev) => ({
+          ...prev,
+          isEnd: true,
+          videoId: prev.videoId + 1,
+        }));
+        break;
+      case "video-last":
+        setVideo((prev) => ({ ...prev, isLastVideo: true }));
+        break;
+      case "video-reset":
+        setVideo((prev) => ({ ...prev, isLastVideo: false, videoId: 0 }));
+        break;
+      case "play":
+        setVideo((prev) => ({ ...prev, isPlaying: !pre.isPlaying }));
+        break;
+      default:
+        return video;
+    }
+  };
   // use effect for play change
   useEffect(() => {
     if (loadedData.length > 3) {
@@ -38,9 +63,32 @@ const VideoCarousel = () => {
       });
     }
   }, [videoId, startPlay]);
+
+  // use gsap
+  useGSAP(() => {
+    gsap.to(".video", {
+      ScrollTrigger: {
+        trigger: ".video",
+        toggleActions: "restart none none none",
+      },
+      onComplete: () => {
+        setVideo((prev) => ({
+          ...prev,
+          startPlay: true,
+          isPlaying: true,
+        }));
+      },
+    });
+  }, [isEnd, videoId]);
+
+  // const handle loaded metadata
+  const handleLoadedMetadata = (index, event) => {
+    setLoadedData((prev) => [...prev, event])
+  }
+
   return (
     <div>
-      <div className="flex items-center relative">
+      <div className="flex items-center relative w-full overflow-hidden">
         {hightlightsSlides.map((list, i) => (
           <div key={list.id} id={`slider-${i}`} className="sm:pr-20 pr-10">
             <div className="video-carousel_container w-full h-full overflow-hidden flex-center rounded-3xl bg-black">
@@ -52,6 +100,7 @@ const VideoCarousel = () => {
                 muted
                 preload="auto"
                 playsInline={true}
+                onLoadedMetadata={(e)=>handleLoadedMetadata(i, e)}
                 onPlay={() => {
                   setVideo((prevVideo) => ({
                     ...prevVideo,
@@ -88,7 +137,17 @@ const VideoCarousel = () => {
               </div>
 
               <button className="control-btn">
-                <img src={isLastVideo? replayImg: isPlaying? playImg: pauseImg} alt={isLastVideo? "replay" : isPlaying? "play": "pause"} />
+                <img
+                  src={isLastVideo ? replayImg : isPlaying ? playImg : pauseImg}
+                  alt={isLastVideo ? "replay" : isPlaying ? "play" : "pause"}
+                  onClick={
+                    isLastVideo
+                      ? ()=> handleProcess("video-reset")
+                      : !isPlaying
+                      ? () => handleProcess("play")
+                      : ()=> handleProcess("pause")
+                  }
+                />
               </button>
             </div>
           </div>
