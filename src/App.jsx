@@ -2,7 +2,8 @@ import React from 'react'
 import {
   Navbar,
   Highlight,
-  Hero
+  Hero,
+  Model
 }  from "./components"
 const App = () => {
   return (
@@ -10,6 +11,7 @@ const App = () => {
       <Navbar />
       <Hero/>
       <Highlight/>
+      <Model />
     </main>
   )
 }
