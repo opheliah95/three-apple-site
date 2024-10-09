@@ -4,6 +4,7 @@ import Highlight from "./Highlight"
 import Model from "./Model"
 import ModelView from "./ModelView"
 import Feature from "./Feature"
+import Footer from "./Footer"
 
 export {
     Hero,
@@ -11,5 +12,6 @@ export {
     Highlight,
     Model,
     ModelView,
-    Feature
+    Feature,
+    Footer
 }
