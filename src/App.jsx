@@ -3,7 +3,8 @@ import {
   Navbar,
   Highlight,
   Hero,
-  Model
+  Model,
+  Feature
 }  from "./components"
 import * as Sentry from "@sentry/react";
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
       <Hero/>
       <Highlight/>
       <Model />
+      <Feature/>
     </main>
   )
 }
